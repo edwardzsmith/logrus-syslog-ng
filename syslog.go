@@ -6,7 +6,6 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	"io/ioutil"
 	"os"
 
 	syslog "github.com/RackSec/srslog"
@@ -30,13 +29,9 @@ func NewSyslogHook(network, raddr string, priority syslog.Priority, tag string) 
 	return &SyslogHook{w}, err
 }
 
-func NewSyslogHookTls(raddr string, priority syslog.Priority, tag string, certPath string, insecure bool) (*SyslogHook, error) {
-	serverCert, err := ioutil.ReadFile(certPath)
-	if err != nil {
-		return nil, err
-	}
+func NewSyslogHookTls(raddr string, priority syslog.Priority, tag string, cert []byte, insecure bool) (*SyslogHook, error) {
 	pool := x509.NewCertPool()
-	pool.AppendCertsFromPEM(serverCert)
+	pool.AppendCertsFromPEM(cert)
 	config := tls.Config{
 		RootCAs: pool,
 	}
