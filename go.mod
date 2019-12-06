@@ -8,5 +8,5 @@ require (
 	github.com/onsi/gomega v0.0.0-20150401040250-4dfabf7db2e4
 	github.com/sirupsen/logrus v1.0.4-0.20170822132746-89742aefa4b2
 	golang.org/x/crypto v0.0.0-20191205180655-e7c4368fe9dd
-	golang.org/x/sys v0.0.0-20161214190518-d75a52659825
+	golang.org/x/sys v0.0.0-20190412213103-97732733099d
 )
