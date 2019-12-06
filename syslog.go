@@ -5,7 +5,9 @@ package logrus_syslog
 import (
 	"crypto/tls"
 	"fmt"
+	"net"
 	"os"
+	"time"
 
 	syslog "github.com/RackSec/srslog"
 	"github.com/sirupsen/logrus"
@@ -28,8 +30,11 @@ func NewSyslogHook(network, raddr string, priority syslog.Priority, tag string) 
 	return &SyslogHook{w}, err
 }
 
-func NewSyslogHookTls(raddr string, priority syslog.Priority, tag string, tlsConfig *tls.Config, insecure bool) (*SyslogHook, error) {
-	w, err := syslog.DialWithTLSConfig(SecureProto, raddr, priority, tag, tlsConfig)
+func NewSyslogHookTls(raddr string, priority syslog.Priority, tag string, tlsConfig *tls.Config) (*SyslogHook, error) {
+	dial := func(network, addr string) (net.Conn, error) {
+		return tls.DialWithDialer(&net.Dialer{Timeout: 5 * time.Second}, "tcp", addr, tlsConfig)
+	}
+	w, err := syslog.DialWithCustomDialer("custom", raddr, priority, tag, dial)
 	return &SyslogHook{w}, err
 }
 
