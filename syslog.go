@@ -4,7 +4,6 @@ package logrus_syslog
 
 import (
 	"crypto/tls"
-	"crypto/x509"
 	"fmt"
 	"os"
 
@@ -29,14 +28,8 @@ func NewSyslogHook(network, raddr string, priority syslog.Priority, tag string) 
 	return &SyslogHook{w}, err
 }
 
-func NewSyslogHookTls(raddr string, priority syslog.Priority, tag string, cert []byte, insecure bool) (*SyslogHook, error) {
-	pool := x509.NewCertPool()
-	pool.AppendCertsFromPEM(cert)
-	config := tls.Config{
-		RootCAs: pool,
-	}
-	config.InsecureSkipVerify = insecure
-	w, err := syslog.DialWithTLSConfig(SecureProto, raddr, priority, tag, &config)
+func NewSyslogHookTls(raddr string, priority syslog.Priority, tag string, tlsConfig *tls.Config, insecure bool) (*SyslogHook, error) {
+	w, err := syslog.DialWithTLSConfig(SecureProto, raddr, priority, tag, tlsConfig)
 	return &SyslogHook{w}, err
 }
 
