@@ -1,4 +1,4 @@
-module logrus-syslog-ng
+module github.com/edwardzsmith/logrus-syslog-ng
 
 go 1.13
 
